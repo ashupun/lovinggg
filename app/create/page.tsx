@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { fontOptions } from "@/lib/store";
+import { fontOptions, expirationOptions } from "@/lib/store";
 import { templates } from "@/lib/templates";
 
 const HeartIcon = ({ className = "" }: { className?: string }) => (
@@ -668,24 +668,67 @@ function CreateForm() {
   const [sender, setSender] = useState("");
   const [message, setMessage] = useState("");
   const [font, setFont] = useState("classic");
+  const [expiration, setExpiration] = useState("1d");
+  const [customLink, setCustomLink] = useState("");
+  const [linkStatus, setLinkStatus] = useState<"idle" | "checking" | "available" | "taken">("idle");
+  const [linkSuggestions, setLinkSuggestions] = useState<string[]>([]);
   const [isCreating, setIsCreating] = useState(false);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [activeTab, setActiveTab] = useState<"write" | "design" | "theme" | "style" | "header">("write");
   const [showIdeas, setShowIdeas] = useState(false);
 
+  useEffect(() => {
+    if (!customLink.trim()) {
+      setLinkStatus("idle");
+      setLinkSuggestions([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setLinkStatus("checking");
+      try {
+        const res = await fetch(`/api/notes/check?id=${encodeURIComponent(customLink.trim())}`);
+        const data = await res.json();
+        if (data.available) {
+          setLinkStatus("available");
+          setLinkSuggestions([]);
+        } else {
+          setLinkStatus("taken");
+          setLinkSuggestions(data.suggestions || []);
+        }
+      } catch {
+        setLinkStatus("idle");
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [customLink]);
+
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!recipient || !message || !selectedTemplate) return;
+    if (customLink && linkStatus === "taken") return;
 
     setIsCreating(true);
     try {
       const res = await fetch("/api/notes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ recipient, sender, message, template: selectedTemplate, signoff: "", font }),
+        body: JSON.stringify({
+          recipient,
+          sender,
+          message,
+          template: selectedTemplate,
+          signoff: "",
+          font,
+          expiration,
+          customId: customLink.trim() || undefined
+        }),
       });
-      const { id } = await res.json();
-      router.push(`/note/${id}?new=true`);
+      const data = await res.json();
+      if (!res.ok || !data.id) {
+        setIsCreating(false);
+        return;
+      }
+      router.push(`/note/${data.id}?new=true`);
     } catch {
       setIsCreating(false);
     }
@@ -751,21 +794,89 @@ function CreateForm() {
             )}
 
             {activeTab === "style" && (
-              <div className="flex gap-2">
-                {fontOptions.map((option) => (
-                  <button
-                    key={option.id}
-                    type="button"
-                    onClick={() => setFont(option.id)}
-                    className={`flex-1 px-3 py-3 rounded-xl text-sm transition-all ${option.class} ${
-                      font === option.id
-                        ? "bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300 ring-2 ring-rose-300 dark:ring-rose-700"
-                        : "bg-gray-100 dark:bg-[#232326] text-gray-700 dark:text-gray-300"
-                    }`}
-                  >
-                    Aa
-                  </button>
-                ))}
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  {fontOptions.map((option) => (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => setFont(option.id)}
+                      className={`flex-1 px-3 py-3 rounded-xl text-sm transition-all ${option.class} ${
+                        font === option.id
+                          ? "bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300 ring-2 ring-rose-300 dark:ring-rose-700"
+                          : "bg-gray-100 dark:bg-[#232326] text-gray-700 dark:text-gray-300"
+                      }`}
+                    >
+                      Aa
+                    </button>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  {expirationOptions.map((option) => (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => setExpiration(option.id)}
+                      className={`flex-1 px-3 py-2.5 rounded-xl text-xs transition-all ${
+                        expiration === option.id
+                          ? "bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300 ring-2 ring-rose-300 dark:ring-rose-700"
+                          : "bg-gray-100 dark:bg-[#232326] text-gray-700 dark:text-gray-300"
+                      }`}
+                    >
+                      {option.name}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-400 whitespace-nowrap">loving.gg/</span>
+                  <div className="flex-1 relative">
+                    <input
+                      type="text"
+                      value={customLink}
+                      onChange={(e) => setCustomLink(e.target.value.replace(/[^a-zA-Z0-9_-]/g, ""))}
+                      placeholder="custom-link"
+                      maxLength={20}
+                      className={`w-full px-3 py-2 bg-gray-50 dark:bg-[#232326] text-gray-900 dark:text-gray-100 border rounded-lg focus:outline-none transition-all placeholder:text-gray-400 text-xs ${
+                        linkStatus === "available" ? "border-green-400" :
+                        linkStatus === "taken" ? "border-red-400" :
+                        "border-transparent"
+                      }`}
+                    />
+                    {linkStatus === "checking" && (
+                      <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                        <div className="w-3 h-3 border-2 border-gray-300 border-t-rose-500 rounded-full animate-spin" />
+                      </div>
+                    )}
+                    {linkStatus === "available" && (
+                      <div className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500">
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                        </svg>
+                      </div>
+                    )}
+                    {linkStatus === "taken" && (
+                      <div className="absolute right-2 top-1/2 -translate-y-1/2 text-red-500">
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                {linkStatus === "taken" && linkSuggestions.length > 0 && (
+                  <div className="flex flex-wrap gap-1">
+                    {linkSuggestions.map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => setCustomLink(s)}
+                        className="text-xs px-2 py-1 bg-gray-100 dark:bg-[#2a2a2d] text-gray-500 rounded hover:bg-rose-100 dark:hover:bg-rose-900/30 hover:text-rose-600 transition-colors"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
@@ -785,7 +896,7 @@ function CreateForm() {
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={isCreating || !recipient || !message}
+              disabled={isCreating || !recipient || !message || (customLink && linkStatus === "taken")}
               className="flex-1 py-3 px-4 bg-gradient-to-r from-rose-500 to-rose-600 text-white font-medium rounded-xl shadow-lg shadow-rose-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {isCreating ? "Creating..." : "Create"}
@@ -1056,10 +1167,90 @@ function CreateForm() {
                 </div>
               </div>
 
+              <div>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Link Duration</p>
+                <div className="flex gap-2">
+                  {expirationOptions.map((option) => (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => setExpiration(option.id)}
+                      className={`flex-1 px-4 py-3 rounded-xl text-sm transition-all ${
+                        expiration === option.id
+                          ? "bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300 ring-2 ring-rose-300 dark:ring-rose-700"
+                          : "bg-gray-100 dark:bg-[#232326] text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                      }`}
+                    >
+                      {option.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Custom Link</p>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-400">loving.gg/note/</span>
+                  <div className="flex-1 relative">
+                    <input
+                      type="text"
+                      value={customLink}
+                      onChange={(e) => setCustomLink(e.target.value.replace(/[^a-zA-Z0-9_-]/g, ""))}
+                      placeholder="your-link"
+                      maxLength={20}
+                      className={`w-full px-3 py-2 bg-gray-50 dark:bg-[#232326] text-gray-900 dark:text-gray-100 border rounded-lg focus:outline-none transition-all placeholder:text-gray-400 text-sm ${
+                        linkStatus === "available" ? "border-green-400 focus:border-green-500" :
+                        linkStatus === "taken" ? "border-red-400 focus:border-red-500" :
+                        "border-transparent focus:border-rose-300"
+                      }`}
+                    />
+                    {linkStatus === "checking" && (
+                      <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                        <div className="w-4 h-4 border-2 border-gray-300 border-t-rose-500 rounded-full animate-spin" />
+                      </div>
+                    )}
+                    {linkStatus === "available" && (
+                      <div className="absolute right-2 top-1/2 -translate-y-1/2 text-green-500">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                        </svg>
+                      </div>
+                    )}
+                    {linkStatus === "taken" && (
+                      <div className="absolute right-2 top-1/2 -translate-y-1/2 text-red-500">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                {linkStatus === "taken" && linkSuggestions.length > 0 && (
+                  <div className="mt-2">
+                    <p className="text-xs text-gray-500 mb-1">Try:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {linkSuggestions.map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onClick={() => setCustomLink(s)}
+                          className="text-xs px-2 py-1 bg-gray-100 dark:bg-[#2a2a2d] text-gray-600 dark:text-gray-400 rounded hover:bg-rose-100 dark:hover:bg-rose-900/30 hover:text-rose-600 dark:hover:text-rose-400 transition-colors"
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {!customLink && (
+                  <p className="text-xs text-gray-400 mt-1">Leave empty for random link</p>
+                )}
+              </div>
+
               <button
                 type="button"
                 onClick={handleSubmit}
-                disabled={isCreating || !recipient || !message}
+                disabled={isCreating || !recipient || !message || (customLink && linkStatus === "taken")}
                 className="w-full mt-2 px-6 py-3 bg-gradient-to-r from-rose-500 to-rose-600 text-white font-medium rounded-full shadow-lg shadow-rose-500/30 hover:shadow-rose-500/40 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
               >
                 {isCreating ? "Creating..." : "Create Website"}

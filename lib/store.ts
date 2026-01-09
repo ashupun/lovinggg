@@ -16,6 +16,12 @@ export const fontOptions = [
   { id: "handwriting", name: "Handwriting", class: "font-[family-name:var(--font-handwriting)]", scale: 1.25 },
 ];
 
+export const expirationOptions = [
+  { id: "1d", name: "1 day", seconds: 86400 },
+  { id: "3d", name: "3 days", seconds: 259200 },
+  { id: "7d", name: "1 week", seconds: 604800 },
+];
+
 
 interface CompactNote {
   r: string;

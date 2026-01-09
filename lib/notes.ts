@@ -6,8 +6,12 @@ const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
-export async function saveNote(id: string, note: LoveNote): Promise<void> {
-  await redis.set(`note:${id}`, JSON.stringify(note));
+export async function saveNote(id: string, note: LoveNote, ttl?: number): Promise<void> {
+  if (ttl) {
+    await redis.set(`note:${id}`, JSON.stringify(note), { ex: ttl });
+  } else {
+    await redis.set(`note:${id}`, JSON.stringify(note), { ex: 86400 });
+  }
 }
 
 export async function getNote(id: string): Promise<LoveNote | null> {

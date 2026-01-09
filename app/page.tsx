@@ -90,10 +90,10 @@ export default function Home() {
             transition={{ delay: 0.1, duration: 0.6 }}
             className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tight text-gray-900 dark:text-white leading-[0.9] mb-8"
           >
-            Make love
+            Love is
             <br />
             <span className="bg-gradient-to-r from-rose-500 via-pink-500 to-rose-400 bg-clip-text text-transparent">
-              websites
+              a link
             </span>
           </motion.h1>
 
