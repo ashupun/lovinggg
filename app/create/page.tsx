@@ -896,7 +896,7 @@ function CreateForm() {
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={isCreating || !recipient || !message || (customLink && linkStatus === "taken")}
+              disabled={isCreating || !recipient || !message || !!(customLink && linkStatus === "taken")}
               className="flex-1 py-3 px-4 bg-gradient-to-r from-rose-500 to-rose-600 text-white font-medium rounded-xl shadow-lg shadow-rose-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {isCreating ? "Creating..." : "Create"}
@@ -1250,7 +1250,7 @@ function CreateForm() {
               <button
                 type="button"
                 onClick={handleSubmit}
-                disabled={isCreating || !recipient || !message || (customLink && linkStatus === "taken")}
+                disabled={isCreating || !recipient || !message || !!(customLink && linkStatus === "taken")}
                 className="w-full mt-2 px-6 py-3 bg-gradient-to-r from-rose-500 to-rose-600 text-white font-medium rounded-full shadow-lg shadow-rose-500/30 hover:shadow-rose-500/40 hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
               >
                 {isCreating ? "Creating..." : "Create Website"}
