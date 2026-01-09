@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display, Cormorant_Garamond } from "next/font/google";
+import { Inter, Playfair_Display, Pacifico, Caveat } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -12,9 +12,14 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
 });
 
-const cormorant = Cormorant_Garamond({
+const pacifico = Pacifico({
   variable: "--font-romantic",
-  weight: ["400", "500", "600"],
+  weight: "400",
+  subsets: ["latin"],
+});
+
+const caveat = Caveat({
+  variable: "--font-handwriting",
   subsets: ["latin"],
 });
 
@@ -31,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${playfair.variable} ${cormorant.variable} antialiased`}>
+      <body className={`${inter.variable} ${playfair.variable} ${pacifico.variable} ${caveat.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>

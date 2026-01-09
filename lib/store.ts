@@ -1,3 +1,5 @@
+import LZString from "lz-string";
+
 export interface LoveNote {
   recipient: string;
   sender: string;
@@ -8,39 +10,48 @@ export interface LoveNote {
 }
 
 export const fontOptions = [
-  { id: "classic", name: "Classic", class: "font-sans" },
-  { id: "elegant", name: "Elegant", class: "font-[family-name:var(--font-playfair)]" },
-  { id: "romantic", name: "Romantic", class: "font-[family-name:var(--font-romantic)]" },
+  { id: "classic", name: "Classic", class: "font-sans", scale: 1 },
+  { id: "elegant", name: "Elegant", class: "font-[family-name:var(--font-playfair)]", scale: 1 },
+  { id: "romantic", name: "Romantic", class: "font-[family-name:var(--font-romantic)]", scale: 1 },
+  { id: "handwriting", name: "Handwriting", class: "font-[family-name:var(--font-handwriting)]", scale: 1.25 },
 ];
 
-export const signoffOptions = [
-  "With love",
-  "Forever yours",
-  "xoxo",
-  "Always",
-  "Yours truly",
-  "Love always",
-  "Thinking of you",
-  "Hugs & kisses",
-  "All my love",
-  "Sweetly",
-];
+
+interface CompactNote {
+  r: string;
+  s: string;
+  m: string;
+  t: string;
+  o: string;
+  f: string;
+}
 
 export function encodeNote(note: LoveNote): string {
-  const json = JSON.stringify(note);
-  const utf8Bytes = new TextEncoder().encode(json);
-  const base64 = btoa(String.fromCharCode(...utf8Bytes));
-  return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  const compact: CompactNote = {
+    r: note.recipient,
+    s: note.sender,
+    m: note.message,
+    t: note.template,
+    o: note.signoff,
+    f: note.font,
+  };
+  const json = JSON.stringify(compact);
+  return LZString.compressToEncodedURIComponent(json);
 }
 
 export function decodeNote(encoded: string): LoveNote | null {
   try {
-    let base64 = encoded.replace(/-/g, "+").replace(/_/g, "/");
-    while (base64.length % 4) base64 += "=";
-    const binaryStr = atob(base64);
-    const bytes = Uint8Array.from(binaryStr, (c) => c.charCodeAt(0));
-    const json = new TextDecoder().decode(bytes);
-    return JSON.parse(json);
+    const json = LZString.decompressFromEncodedURIComponent(encoded);
+    if (!json) return null;
+    const compact: CompactNote = JSON.parse(json);
+    return {
+      recipient: compact.r,
+      sender: compact.s,
+      message: compact.m,
+      template: compact.t,
+      signoff: compact.o,
+      font: compact.f,
+    };
   } catch {
     return null;
   }

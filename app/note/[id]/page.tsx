@@ -45,7 +45,9 @@ const BoltIcon = ({ className = "" }: { className?: string }) => (
 );
 
 function MinimalTemplate({ note }: { note: LoveNote }) {
-  const fontClass = fontOptions.find(f => f.id === note.font)?.class || "";
+  const fontOption = fontOptions.find(f => f.id === note.font) || fontOptions[0];
+  const fontClass = fontOption?.class || "";
+  const fontScale = fontOption?.scale || 1;
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-6">
       <motion.div
@@ -53,8 +55,9 @@ function MinimalTemplate({ note }: { note: LoveNote }) {
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
         className={`w-full max-w-md text-center ${fontClass}`}
+        style={{ fontSize: `${fontScale}em` }}
       >
-        <h1 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-semibold text-gray-900 mb-8">
+        <h1 className="text-4xl md:text-5xl font-semibold text-gray-900 mb-8">
           {note.recipient}
         </h1>
         <p className="text-lg md:text-xl leading-relaxed text-gray-600 whitespace-pre-wrap">
@@ -62,7 +65,7 @@ function MinimalTemplate({ note }: { note: LoveNote }) {
         </p>
         {note.sender && (
           <div className="mt-10 pt-6 border-t border-gray-100">
-            <p className="text-gray-400 text-xs tracking-wide">{note.signoff}</p>
+            <HeartIcon className="w-4 h-4 text-gray-400 mx-auto" />
             <p className="text-xl text-gray-800 mt-1">{note.sender}</p>
           </div>
         )}
@@ -72,7 +75,9 @@ function MinimalTemplate({ note }: { note: LoveNote }) {
 }
 
 function RoseTemplate({ note }: { note: LoveNote }) {
-  const fontClass = fontOptions.find(f => f.id === note.font)?.class || "";
+  const fontOption = fontOptions.find(f => f.id === note.font) || fontOptions[0];
+  const fontClass = fontOption?.class || "";
+  const fontScale = fontOption?.scale || 1;
   const positions = [
     { x: 5, y: 8 }, { x: 85, y: 15 }, { x: 25, y: 75 }, { x: 70, y: 85 }, { x: 45, y: 5 },
     { x: 12, y: 45 }, { x: 92, y: 55 }, { x: 35, y: 25 }, { x: 60, y: 65 }, { x: 78, y: 35 },
@@ -105,15 +110,15 @@ function RoseTemplate({ note }: { note: LoveNote }) {
         transition={{ duration: 0.8 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className={`bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-xl border border-rose-100 text-center ${fontClass}`}>
+        <div className={`bg-white/80 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-xl border border-rose-100 text-center ${fontClass}`} style={{ fontSize: `${fontScale}em` }}>
           <motion.div
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
             className="mb-6"
           >
-            <HeartIcon className="w-10 h-10 text-rose-400 mx-auto" />
+            <HeartIcon className="w-14 h-14 text-rose-400 mx-auto" />
           </motion.div>
-          <h1 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-semibold text-rose-900 mb-6">
+          <h1 className="text-3xl md:text-4xl font-semibold text-rose-900 mb-6">
             {note.recipient}
           </h1>
           <p className="text-base md:text-lg leading-relaxed text-rose-700 whitespace-pre-wrap">
@@ -121,7 +126,7 @@ function RoseTemplate({ note }: { note: LoveNote }) {
           </p>
           {note.sender && (
             <div className="mt-8 pt-6 border-t border-rose-100">
-              <p className="text-rose-400 text-xs">{note.signoff}</p>
+              <HeartIcon className="w-4 h-4 text-rose-400 mx-auto" />
               <p className="text-xl text-rose-600 mt-1">{note.sender}</p>
             </div>
           )}
@@ -132,7 +137,9 @@ function RoseTemplate({ note }: { note: LoveNote }) {
 }
 
 function MidnightTemplate({ note }: { note: LoveNote }) {
-  const fontClass = fontOptions.find(f => f.id === note.font)?.class || "";
+  const fontOption = fontOptions.find(f => f.id === note.font) || fontOptions[0];
+  const fontClass = fontOption?.class || "";
+  const fontScale = fontOption?.scale || 1;
   const starPositions = [
     { x: 8, y: 12 }, { x: 92, y: 8 }, { x: 18, y: 82 }, { x: 78, y: 88 }, { x: 52, y: 6 },
     { x: 6, y: 48 }, { x: 88, y: 45 }, { x: 28, y: 32 }, { x: 68, y: 72 }, { x: 82, y: 28 },
@@ -178,15 +185,16 @@ function MidnightTemplate({ note }: { note: LoveNote }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
         className={`w-full max-w-md text-center relative z-10 ${fontClass}`}
+        style={{ fontSize: `${fontScale}em` }}
       >
         <motion.div
           animate={{ rotate: [0, 5, -5, 0] }}
           transition={{ duration: 4, repeat: Infinity }}
           className="mb-6"
         >
-          <StarIcon className="w-10 h-10 text-amber-300 mx-auto" />
+          <StarIcon className="w-14 h-14 text-amber-300 mx-auto" />
         </motion.div>
-        <h1 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-semibold text-white mb-8">
+        <h1 className="text-4xl md:text-5xl font-semibold text-white mb-8">
           {note.recipient}
         </h1>
         <p className="text-lg md:text-xl leading-relaxed text-slate-200 whitespace-pre-wrap">
@@ -194,7 +202,7 @@ function MidnightTemplate({ note }: { note: LoveNote }) {
         </p>
         {note.sender && (
           <div className="mt-10">
-            <p className="text-slate-400 text-xs">{note.signoff}</p>
+            <HeartIcon className="w-4 h-4 text-slate-400 mx-auto" />
             <p className="text-xl text-amber-300 mt-1">{note.sender}</p>
           </div>
         )}
@@ -204,7 +212,9 @@ function MidnightTemplate({ note }: { note: LoveNote }) {
 }
 
 function LavenderTemplate({ note }: { note: LoveNote }) {
-  const fontClass = fontOptions.find(f => f.id === note.font)?.class || "";
+  const fontOption = fontOptions.find(f => f.id === note.font) || fontOptions[0];
+  const fontClass = fontOption?.class || "";
+  const fontScale = fontOption?.scale || 1;
   const positions = [
     { x: 8, y: 15, type: 0 }, { x: 88, y: 22, type: 1 }, { x: 22, y: 78, type: 2 }, { x: 72, y: 82, type: 0 },
     { x: 48, y: 8, type: 1 }, { x: 5, y: 52, type: 2 }, { x: 92, y: 58, type: 0 }, { x: 32, y: 28, type: 1 },
@@ -243,7 +253,7 @@ function LavenderTemplate({ note }: { note: LoveNote }) {
         transition={{ duration: 0.8 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className={`bg-white/60 backdrop-blur-md rounded-3xl p-8 md:p-10 shadow-2xl border border-purple-100 text-center ${fontClass}`}>
+        <div className={`bg-white/60 backdrop-blur-md rounded-3xl p-8 md:p-10 shadow-2xl border border-purple-100 text-center ${fontClass}`} style={{ fontSize: `${fontScale}em` }}>
           <div className="flex justify-center gap-2 mb-6">
             {[...Array(3)].map((_, i) => (
               <motion.div
@@ -251,11 +261,11 @@ function LavenderTemplate({ note }: { note: LoveNote }) {
                 animate={{ y: [0, -8, 0], scale: [1, 1.2, 1] }}
                 transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }}
               >
-                <HeartIcon className="w-8 h-8 text-violet-400" />
+                <HeartIcon className="w-10 h-10 text-violet-400" />
               </motion.div>
             ))}
           </div>
-          <h1 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-semibold text-violet-900 mb-6">
+          <h1 className="text-3xl md:text-4xl font-semibold text-violet-900 mb-6">
             {note.recipient}
           </h1>
           <p className="text-base md:text-lg leading-relaxed text-violet-700 whitespace-pre-wrap">
@@ -263,7 +273,7 @@ function LavenderTemplate({ note }: { note: LoveNote }) {
           </p>
           {note.sender && (
             <div className="mt-8 pt-6 border-t border-purple-100">
-              <p className="text-violet-400 text-xs">{note.signoff}</p>
+              <HeartIcon className="w-4 h-4 text-violet-400 mx-auto" />
               <p className="text-xl text-violet-600 mt-1">{note.sender}</p>
             </div>
           )}
@@ -274,7 +284,9 @@ function LavenderTemplate({ note }: { note: LoveNote }) {
 }
 
 function SunsetTemplate({ note }: { note: LoveNote }) {
-  const fontClass = fontOptions.find(f => f.id === note.font)?.class || "";
+  const fontOption = fontOptions.find(f => f.id === note.font) || fontOptions[0];
+  const fontClass = fontOption?.class || "";
+  const fontScale = fontOption?.scale || 1;
   const cloudPositions = [
     { x: 5, y: 8 }, { x: 75, y: 12 }, { x: 25, y: 25 }, { x: 88, y: 35 },
     { x: 45, y: 18 }, { x: 12, y: 38 }, { x: 65, y: 5 }, { x: 35, y: 32 }
@@ -323,13 +335,14 @@ function SunsetTemplate({ note }: { note: LoveNote }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
         className={`w-full max-w-md text-center relative z-10 ${fontClass}`}
+        style={{ fontSize: `${fontScale}em` }}
       >
         <motion.div
           animate={{ scale: [1, 1.1, 1], boxShadow: ['0 0 30px rgba(251,191,36,0.4)', '0 0 60px rgba(251,191,36,0.6)', '0 0 30px rgba(251,191,36,0.4)'] }}
           transition={{ duration: 3, repeat: Infinity }}
           className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-300 to-orange-400 mx-auto mb-8 shadow-lg shadow-orange-300/50"
         />
-        <h1 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-semibold text-amber-900 mb-8">
+        <h1 className="text-4xl md:text-5xl font-semibold text-amber-900 mb-8">
           {note.recipient}
         </h1>
         <p className="text-lg md:text-xl leading-relaxed text-amber-800 whitespace-pre-wrap">
@@ -337,7 +350,7 @@ function SunsetTemplate({ note }: { note: LoveNote }) {
         </p>
         {note.sender && (
           <div className="mt-10">
-            <p className="text-orange-400 text-xs">{note.signoff}</p>
+            <HeartIcon className="w-4 h-4 text-orange-400 mx-auto" />
             <p className="text-xl text-orange-600 mt-1">{note.sender}</p>
           </div>
         )}
@@ -347,7 +360,9 @@ function SunsetTemplate({ note }: { note: LoveNote }) {
 }
 
 function OceanTemplate({ note }: { note: LoveNote }) {
-  const fontClass = fontOptions.find(f => f.id === note.font)?.class || "";
+  const fontOption = fontOptions.find(f => f.id === note.font) || fontOptions[0];
+  const fontClass = fontOption?.class || "";
+  const fontScale = fontOption?.scale || 1;
   const bubblePositions = [
     { x: 8 }, { x: 22 }, { x: 38 }, { x: 52 }, { x: 68 }, { x: 82 }, { x: 95 },
     { x: 15 }, { x: 32 }, { x: 45 }, { x: 58 }, { x: 75 }, { x: 88 }, { x: 5 },
@@ -405,6 +420,7 @@ function OceanTemplate({ note }: { note: LoveNote }) {
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
         className={`w-full max-w-md text-center relative z-10 ${fontClass}`}
+        style={{ fontSize: `${fontScale}em` }}
       >
         <motion.div
           animate={{ y: [0, -8, 0] }}
@@ -420,7 +436,7 @@ function OceanTemplate({ note }: { note: LoveNote }) {
             />
           ))}
         </motion.div>
-        <h1 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-semibold text-sky-900 mb-8">
+        <h1 className="text-4xl md:text-5xl font-semibold text-sky-900 mb-8">
           {note.recipient}
         </h1>
         <p className="text-lg md:text-xl leading-relaxed text-sky-700 whitespace-pre-wrap">
@@ -428,7 +444,7 @@ function OceanTemplate({ note }: { note: LoveNote }) {
         </p>
         {note.sender && (
           <div className="mt-10">
-            <p className="text-cyan-400 text-xs">{note.signoff}</p>
+            <HeartIcon className="w-4 h-4 text-cyan-400 mx-auto" />
             <p className="text-xl text-cyan-600 mt-1">{note.sender}</p>
           </div>
         )}
@@ -438,7 +454,9 @@ function OceanTemplate({ note }: { note: LoveNote }) {
 }
 
 function HelloKittyTemplate({ note }: { note: LoveNote }) {
-  const fontClass = fontOptions.find(f => f.id === note.font)?.class || "";
+  const fontOption = fontOptions.find(f => f.id === note.font) || fontOptions[0];
+  const fontClass = fontOption?.class || "";
+  const fontScale = fontOption?.scale || 1;
   const positions = [
     { x: 5, y: 12, type: 0 }, { x: 88, y: 8, type: 1 }, { x: 22, y: 78, type: 2 }, { x: 72, y: 85, type: 0 },
     { x: 48, y: 5, type: 1 }, { x: 8, y: 48, type: 2 }, { x: 92, y: 52, type: 0 }, { x: 32, y: 28, type: 1 },
@@ -478,15 +496,15 @@ function HelloKittyTemplate({ note }: { note: LoveNote }) {
         transition={{ duration: 0.8 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className={`bg-white/95 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-xl border-2 border-red-100 text-center ${fontClass}`}>
+        <div className={`bg-white/95 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-xl border-2 border-red-100 text-center ${fontClass}`} style={{ fontSize: `${fontScale}em` }}>
           <motion.div animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 2, repeat: Infinity }} className="mb-5">
-            <Image src="/hellokittyicon.jpg" alt="Hello Kitty" width={64} height={64} className="rounded-xl mx-auto" />
+            <Image src="/hellokittyicon.jpg" alt="Hello Kitty" width={80} height={80} className="rounded-xl mx-auto" />
           </motion.div>
           <h1 className="text-3xl md:text-4xl font-bold text-pink-600 mb-6">{note.recipient}</h1>
           <p className="text-base md:text-lg leading-relaxed text-pink-700 whitespace-pre-wrap">{note.message}</p>
           {note.sender && (
             <div className="mt-8 pt-6 border-t border-red-100">
-              <p className="text-pink-400 text-xs">{note.signoff}</p>
+              <HeartIcon className="w-4 h-4 text-pink-400 mx-auto" />
               <p className="text-xl text-red-500 font-bold mt-1">{note.sender}</p>
             </div>
           )}
@@ -504,7 +522,9 @@ function HelloKittyTemplate({ note }: { note: LoveNote }) {
 }
 
 function KuromiTemplate({ note }: { note: LoveNote }) {
-  const fontClass = fontOptions.find(f => f.id === note.font)?.class || "";
+  const fontOption = fontOptions.find(f => f.id === note.font) || fontOptions[0];
+  const fontClass = fontOption?.class || "";
+  const fontScale = fontOption?.scale || 1;
   const positions = [
     { x: 8, y: 10 }, { x: 88, y: 15 }, { x: 18, y: 82 }, { x: 75, y: 88 }, { x: 52, y: 5 },
     { x: 5, y: 45 }, { x: 92, y: 48 }, { x: 28, y: 32 }, { x: 68, y: 72 }, { x: 82, y: 28 },
@@ -555,15 +575,15 @@ function KuromiTemplate({ note }: { note: LoveNote }) {
         transition={{ duration: 0.8 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className={`bg-black/70 backdrop-blur-md rounded-2xl p-8 md:p-10 border border-purple-500/30 shadow-2xl shadow-purple-500/20 text-center ${fontClass}`}>
+        <div className={`bg-black/70 backdrop-blur-md rounded-2xl p-8 md:p-10 border border-purple-500/30 shadow-2xl shadow-purple-500/20 text-center ${fontClass}`} style={{ fontSize: `${fontScale}em` }}>
           <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 1.5, repeat: Infinity }} className="mb-5">
-            <Image src="/kuromiicon.jpg" alt="Kuromi" width={64} height={64} className="rounded-xl mx-auto" />
+            <Image src="/kuromiicon.jpg" alt="Kuromi" width={80} height={80} className="rounded-xl mx-auto" />
           </motion.div>
           <h1 className="text-3xl md:text-4xl font-black text-white mb-6">{note.recipient}</h1>
           <p className="text-base md:text-lg leading-relaxed text-purple-200 whitespace-pre-wrap">{note.message}</p>
           {note.sender && (
             <div className="mt-8">
-              <p className="text-purple-400 text-xs">{note.signoff}</p>
+              <HeartIcon className="w-4 h-4 text-purple-400 mx-auto" />
               <p className="text-xl text-pink-400 font-bold mt-1">{note.sender}</p>
             </div>
           )}
@@ -579,7 +599,9 @@ function KuromiTemplate({ note }: { note: LoveNote }) {
 }
 
 function MyMelodyTemplate({ note }: { note: LoveNote }) {
-  const fontClass = fontOptions.find(f => f.id === note.font)?.class || "";
+  const fontOption = fontOptions.find(f => f.id === note.font) || fontOptions[0];
+  const fontClass = fontOption?.class || "";
+  const fontScale = fontOption?.scale || 1;
   const positions = [
     { x: 8, y: 12, type: 0 }, { x: 85, y: 18, type: 1 }, { x: 22, y: 75, type: 2 }, { x: 72, y: 82, type: 0 },
     { x: 48, y: 8, type: 1 }, { x: 5, y: 48, type: 2 }, { x: 92, y: 55, type: 0 }, { x: 32, y: 25, type: 1 },
@@ -618,15 +640,15 @@ function MyMelodyTemplate({ note }: { note: LoveNote }) {
         transition={{ duration: 0.8 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className={`bg-white/90 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-xl border border-pink-200 text-center ${fontClass}`}>
+        <div className={`bg-white/90 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-xl border border-pink-200 text-center ${fontClass}`} style={{ fontSize: `${fontScale}em` }}>
           <motion.div animate={{ rotate: [-3, 3, -3] }} transition={{ duration: 2, repeat: Infinity }} className="mb-5">
-            <Image src="/mymelodyicon.jpg" alt="My Melody" width={64} height={64} className="rounded-xl mx-auto" />
+            <Image src="/mymelodyicon.jpg" alt="My Melody" width={80} height={80} className="rounded-xl mx-auto" />
           </motion.div>
           <h1 className="text-3xl md:text-4xl font-semibold text-pink-600 mb-6">{note.recipient}</h1>
           <p className="text-base md:text-lg leading-relaxed text-pink-700 whitespace-pre-wrap">{note.message}</p>
           {note.sender && (
             <div className="mt-8 pt-6 border-t border-pink-100">
-              <p className="text-pink-300 text-xs">{note.signoff}</p>
+              <HeartIcon className="w-4 h-4 text-pink-300 mx-auto" />
               <p className="text-xl text-pink-500 mt-1">{note.sender}</p>
             </div>
           )}
@@ -637,7 +659,9 @@ function MyMelodyTemplate({ note }: { note: LoveNote }) {
 }
 
 function CinnamorollTemplate({ note }: { note: LoveNote }) {
-  const fontClass = fontOptions.find(f => f.id === note.font)?.class || "";
+  const fontOption = fontOptions.find(f => f.id === note.font) || fontOptions[0];
+  const fontClass = fontOption?.class || "";
+  const fontScale = fontOption?.scale || 1;
   const cloudPositions = [
     { x: 5, y: 10 }, { x: 78, y: 8 }, { x: 25, y: 35 }, { x: 88, y: 42 },
     { x: 45, y: 18 }, { x: 12, y: 55 }, { x: 65, y: 28 }, { x: 92, y: 65 },
@@ -679,15 +703,15 @@ function CinnamorollTemplate({ note }: { note: LoveNote }) {
         transition={{ duration: 0.8 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className={`bg-white/95 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-lg border border-sky-100 text-center ${fontClass}`}>
+        <div className={`bg-white/95 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-lg border border-sky-100 text-center ${fontClass}`} style={{ fontSize: `${fontScale}em` }}>
           <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 3, repeat: Infinity }} className="mb-5">
-            <Image src="/cinnamorollicon.jpg" alt="Cinnamoroll" width={64} height={64} className="rounded-xl mx-auto" />
+            <Image src="/cinnamorollicon.jpg" alt="Cinnamoroll" width={80} height={80} className="rounded-xl mx-auto" />
           </motion.div>
           <h1 className="text-3xl md:text-4xl font-semibold text-sky-600 mb-6">{note.recipient}</h1>
           <p className="text-base md:text-lg leading-relaxed text-sky-700 whitespace-pre-wrap">{note.message}</p>
           {note.sender && (
             <div className="mt-8 pt-6 border-t border-sky-100">
-              <p className="text-sky-300 text-xs">{note.signoff}</p>
+              <HeartIcon className="w-4 h-4 text-sky-300 mx-auto" />
               <p className="text-xl text-sky-500 mt-1">{note.sender}</p>
             </div>
           )}
@@ -705,7 +729,9 @@ function CinnamorollTemplate({ note }: { note: LoveNote }) {
 }
 
 function BadtzMaruTemplate({ note }: { note: LoveNote }) {
-  const fontClass = fontOptions.find(f => f.id === note.font)?.class || "";
+  const fontOption = fontOptions.find(f => f.id === note.font) || fontOptions[0];
+  const fontClass = fontOption?.class || "";
+  const fontScale = fontOption?.scale || 1;
   const positions = [
     { x: 8, y: 12 }, { x: 88, y: 8 }, { x: 22, y: 78 }, { x: 75, y: 85 },
     { x: 48, y: 5 }, { x: 5, y: 45 }, { x: 92, y: 52 }, { x: 32, y: 28 },
@@ -733,15 +759,15 @@ function BadtzMaruTemplate({ note }: { note: LoveNote }) {
         transition={{ duration: 0.6 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className={`bg-zinc-800/90 backdrop-blur-sm rounded-xl p-8 md:p-10 border border-yellow-400/30 shadow-xl text-center ${fontClass}`}>
+        <div className={`bg-zinc-800/90 backdrop-blur-sm rounded-xl p-8 md:p-10 border border-yellow-400/30 shadow-xl text-center ${fontClass}`} style={{ fontSize: `${fontScale}em` }}>
           <motion.div animate={{ rotate: [-10, 10, -10] }} transition={{ duration: 1, repeat: Infinity }} className="mb-5">
-            <Image src="/badtzmaruicon.jpg" alt="Badtz-Maru" width={64} height={64} className="rounded-xl mx-auto" />
+            <Image src="/badtzmaruicon.jpg" alt="Badtz-Maru" width={80} height={80} className="rounded-xl mx-auto" />
           </motion.div>
           <h1 className="text-3xl md:text-4xl font-black text-white mb-6">{note.recipient}</h1>
           <p className="text-base md:text-lg leading-relaxed text-zinc-300 whitespace-pre-wrap">{note.message}</p>
           {note.sender && (
             <div className="mt-8">
-              <p className="text-zinc-500 text-xs">{note.signoff}</p>
+              <HeartIcon className="w-4 h-4 text-zinc-500 mx-auto" />
               <p className="text-xl text-yellow-400 font-bold mt-1">{note.sender}</p>
             </div>
           )}
@@ -755,7 +781,9 @@ function BadtzMaruTemplate({ note }: { note: LoveNote }) {
 }
 
 function PompompurinTemplate({ note }: { note: LoveNote }) {
-  const fontClass = fontOptions.find(f => f.id === note.font)?.class || "";
+  const fontOption = fontOptions.find(f => f.id === note.font) || fontOptions[0];
+  const fontClass = fontOption?.class || "";
+  const fontScale = fontOption?.scale || 1;
   const positions = [
     { x: 8, y: 15, type: 0 }, { x: 88, y: 12, type: 1 }, { x: 22, y: 75, type: 0 }, { x: 72, y: 82, type: 1 },
     { x: 48, y: 8, type: 0 }, { x: 5, y: 48, type: 1 }, { x: 92, y: 55, type: 0 }, { x: 32, y: 28, type: 1 },
@@ -792,15 +820,15 @@ function PompompurinTemplate({ note }: { note: LoveNote }) {
         transition={{ duration: 0.8 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className={`bg-white/90 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-xl border-2 border-amber-200 text-center ${fontClass}`}>
+        <div className={`bg-white/90 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-xl border-2 border-amber-200 text-center ${fontClass}`} style={{ fontSize: `${fontScale}em` }}>
           <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 2, repeat: Infinity }} className="mb-5">
-            <Image src="/pompompurinicon.jpg" alt="Pompompurin" width={64} height={64} className="rounded-xl mx-auto" />
+            <Image src="/pompompurinicon.jpg" alt="Pompompurin" width={80} height={80} className="rounded-xl mx-auto" />
           </motion.div>
           <h1 className="text-3xl md:text-4xl font-bold text-amber-700 mb-6">{note.recipient}</h1>
           <p className="text-base md:text-lg leading-relaxed text-amber-800 whitespace-pre-wrap">{note.message}</p>
           {note.sender && (
             <div className="mt-8 pt-6 border-t border-amber-100">
-              <p className="text-amber-400 text-xs">{note.signoff}</p>
+              <HeartIcon className="w-4 h-4 text-amber-400 mx-auto" />
               <p className="text-xl text-amber-600 font-bold mt-1">{note.sender}</p>
             </div>
           )}
@@ -816,7 +844,9 @@ function PompompurinTemplate({ note }: { note: LoveNote }) {
 }
 
 function MySweetPianoTemplate({ note }: { note: LoveNote }) {
-  const fontClass = fontOptions.find(f => f.id === note.font)?.class || "";
+  const fontOption = fontOptions.find(f => f.id === note.font) || fontOptions[0];
+  const fontClass = fontOption?.class || "";
+  const fontScale = fontOption?.scale || 1;
   const positions = [
     { x: 8, y: 12, type: 0 }, { x: 85, y: 18, type: 1 }, { x: 22, y: 78, type: 2 }, { x: 72, y: 85, type: 0 },
     { x: 48, y: 5, type: 1 }, { x: 5, y: 48, type: 2 }, { x: 92, y: 52, type: 0 }, { x: 32, y: 28, type: 1 },
@@ -855,15 +885,15 @@ function MySweetPianoTemplate({ note }: { note: LoveNote }) {
         transition={{ duration: 0.8 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className={`bg-white/90 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-xl border border-pink-200 text-center ${fontClass}`}>
+        <div className={`bg-white/90 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-xl border border-pink-200 text-center ${fontClass}`} style={{ fontSize: `${fontScale}em` }}>
           <motion.div animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 2, repeat: Infinity }} className="mb-5">
-            <Image src="/mysweetpianoicon.jpg" alt="My Sweet Piano" width={64} height={64} className="rounded-xl mx-auto" />
+            <Image src="/mysweetpianoicon.jpg" alt="My Sweet Piano" width={80} height={80} className="rounded-xl mx-auto" />
           </motion.div>
           <h1 className="text-3xl md:text-4xl font-semibold text-pink-600 mb-6">{note.recipient}</h1>
           <p className="text-base md:text-lg leading-relaxed text-pink-700 whitespace-pre-wrap">{note.message}</p>
           {note.sender && (
             <div className="mt-8 pt-6 border-t border-pink-100">
-              <p className="text-pink-300 text-xs">{note.signoff}</p>
+              <HeartIcon className="w-4 h-4 text-pink-300 mx-auto" />
               <p className="text-xl text-pink-500 mt-1">{note.sender}</p>
             </div>
           )}
@@ -881,7 +911,9 @@ function MySweetPianoTemplate({ note }: { note: LoveNote }) {
 }
 
 function BakuTemplate({ note }: { note: LoveNote }) {
-  const fontClass = fontOptions.find(f => f.id === note.font)?.class || "";
+  const fontOption = fontOptions.find(f => f.id === note.font) || fontOptions[0];
+  const fontClass = fontOption?.class || "";
+  const fontScale = fontOption?.scale || 1;
   const positions = [
     { x: 8, y: 12 }, { x: 88, y: 18 }, { x: 22, y: 78 }, { x: 72, y: 82 },
     { x: 48, y: 8 }, { x: 5, y: 48 }, { x: 92, y: 55 }, { x: 32, y: 28 },
@@ -915,15 +947,15 @@ function BakuTemplate({ note }: { note: LoveNote }) {
         transition={{ duration: 0.8 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className={`bg-white/90 backdrop-blur-sm rounded-2xl p-8 md:p-10 shadow-xl border border-indigo-200 text-center ${fontClass}`}>
+        <div className={`bg-white/90 backdrop-blur-sm rounded-2xl p-8 md:p-10 shadow-xl border border-indigo-200 text-center ${fontClass}`} style={{ fontSize: `${fontScale}em` }}>
           <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 2.5, repeat: Infinity }} className="mb-5">
-            <Image src="/bakuicon.jpg" alt="Baku" width={64} height={64} className="rounded-xl mx-auto" />
+            <Image src="/bakuicon.jpg" alt="Baku" width={80} height={80} className="rounded-xl mx-auto" />
           </motion.div>
           <h1 className="text-3xl md:text-4xl font-semibold text-indigo-700 mb-6">{note.recipient}</h1>
           <p className="text-base md:text-lg leading-relaxed text-purple-700 whitespace-pre-wrap">{note.message}</p>
           {note.sender && (
             <div className="mt-8 pt-6 border-t border-indigo-100">
-              <p className="text-indigo-300 text-xs">{note.signoff}</p>
+              <HeartIcon className="w-4 h-4 text-indigo-300 mx-auto" />
               <p className="text-xl text-indigo-600 mt-1">{note.sender}</p>
             </div>
           )}
@@ -934,7 +966,9 @@ function BakuTemplate({ note }: { note: LoveNote }) {
 }
 
 function TuxedoSamTemplate({ note }: { note: LoveNote }) {
-  const fontClass = fontOptions.find(f => f.id === note.font)?.class || "";
+  const fontOption = fontOptions.find(f => f.id === note.font) || fontOptions[0];
+  const fontClass = fontOption?.class || "";
+  const fontScale = fontOption?.scale || 1;
   const positions = [
     { x: 8, y: 15, type: 0 }, { x: 85, y: 12, type: 1 }, { x: 22, y: 78, type: 0 }, { x: 72, y: 85, type: 1 },
     { x: 48, y: 8, type: 0 }, { x: 5, y: 52, type: 1 }, { x: 92, y: 48, type: 0 }, { x: 32, y: 28, type: 1 },
@@ -971,15 +1005,15 @@ function TuxedoSamTemplate({ note }: { note: LoveNote }) {
         transition={{ duration: 0.8 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className={`bg-white/95 backdrop-blur-sm rounded-2xl p-8 md:p-10 shadow-xl border border-blue-200 text-center ${fontClass}`}>
+        <div className={`bg-white/95 backdrop-blur-sm rounded-2xl p-8 md:p-10 shadow-xl border border-blue-200 text-center ${fontClass}`} style={{ fontSize: `${fontScale}em` }}>
           <motion.div animate={{ rotate: [-3, 3, -3] }} transition={{ duration: 2, repeat: Infinity }} className="mb-5">
-            <Image src="/tuzedosamicon.jpg" alt="Tuxedo Sam" width={64} height={64} className="rounded-xl mx-auto" />
+            <Image src="/tuzedosamicon.jpg" alt="Tuxedo Sam" width={80} height={80} className="rounded-xl mx-auto" />
           </motion.div>
           <h1 className="text-3xl md:text-4xl font-semibold text-blue-700 mb-6">{note.recipient}</h1>
           <p className="text-base md:text-lg leading-relaxed text-slate-700 whitespace-pre-wrap">{note.message}</p>
           {note.sender && (
             <div className="mt-8 pt-6 border-t border-blue-100">
-              <p className="text-blue-300 text-xs">{note.signoff}</p>
+              <HeartIcon className="w-4 h-4 text-blue-300 mx-auto" />
               <p className="text-xl text-blue-600 mt-1">{note.sender}</p>
             </div>
           )}
@@ -990,7 +1024,9 @@ function TuxedoSamTemplate({ note }: { note: LoveNote }) {
 }
 
 function PochaccoTemplate({ note }: { note: LoveNote }) {
-  const fontClass = fontOptions.find(f => f.id === note.font)?.class || "";
+  const fontOption = fontOptions.find(f => f.id === note.font) || fontOptions[0];
+  const fontClass = fontOption?.class || "";
+  const fontScale = fontOption?.scale || 1;
   const positions = [
     { x: 8, y: 12, type: 0 }, { x: 88, y: 18, type: 1 }, { x: 22, y: 75, type: 0 }, { x: 72, y: 82, type: 1 },
     { x: 48, y: 5, type: 0 }, { x: 5, y: 48, type: 1 }, { x: 92, y: 55, type: 0 }, { x: 32, y: 28, type: 1 },
@@ -1027,15 +1063,15 @@ function PochaccoTemplate({ note }: { note: LoveNote }) {
         transition={{ duration: 0.8 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className={`bg-white/95 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-xl border border-emerald-200 text-center ${fontClass}`}>
+        <div className={`bg-white/95 backdrop-blur-sm rounded-3xl p-8 md:p-10 shadow-xl border border-emerald-200 text-center ${fontClass}`} style={{ fontSize: `${fontScale}em` }}>
           <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 1.5, repeat: Infinity }} className="mb-5">
-            <Image src="/pochaccoicon.jpg" alt="Pochacco" width={64} height={64} className="rounded-xl mx-auto" />
+            <Image src="/pochaccoicon.jpg" alt="Pochacco" width={80} height={80} className="rounded-xl mx-auto" />
           </motion.div>
           <h1 className="text-3xl md:text-4xl font-bold text-emerald-700 mb-6">{note.recipient}</h1>
           <p className="text-base md:text-lg leading-relaxed text-teal-700 whitespace-pre-wrap">{note.message}</p>
           {note.sender && (
             <div className="mt-8 pt-6 border-t border-emerald-100">
-              <p className="text-emerald-400 text-xs">{note.signoff}</p>
+              <HeartIcon className="w-4 h-4 text-emerald-400 mx-auto" />
               <p className="text-xl text-emerald-600 font-bold mt-1">{note.sender}</p>
             </div>
           )}
@@ -1080,10 +1116,22 @@ function NoteContent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const id = params.id as string;
-    const found = decodeNote(id);
-    setNote(found);
-    setLoading(false);
+    const fetchNote = async () => {
+      const id = params.id as string;
+      try {
+        const res = await fetch(`/api/notes/${id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setNote(data);
+          setLoading(false);
+          return;
+        }
+      } catch {}
+      const found = decodeNote(id);
+      setNote(found);
+      setLoading(false);
+    };
+    fetchNote();
   }, [params.id]);
 
   const copyLink = async () => {
@@ -1095,7 +1143,7 @@ function NoteContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#fdfbf7] dark:bg-[#0f0f0f]">
+      <div className="min-h-screen flex items-center justify-center bg-[#fdfbf7] dark:bg-[#121214]">
         <div className="animate-pulse text-gray-500 dark:text-gray-400">Loading...</div>
       </div>
     );
@@ -1103,7 +1151,7 @@ function NoteContent() {
 
   if (!note) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 bg-[#fdfbf7] dark:bg-[#0f0f0f]">
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 bg-[#fdfbf7] dark:bg-[#121214]">
         <div className="text-center">
           <HeartIcon className="w-12 h-12 text-rose-300 mx-auto mb-6" />
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">Note not found</h1>
@@ -1134,9 +1182,11 @@ function NoteContent() {
         </motion.div>
       )}
       <TemplateComponent note={note} />
-      <div className="fixed bottom-4 left-1/2 -translate-x-1/2">
-        <Link href="/" className="text-xs text-gray-400 hover:text-gray-600 transition-colors bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-full">
-          Made with loving.gg
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full">
+        <span className="text-xs text-gray-600">loving<span className="text-rose-500">.gg</span></span>
+        <span className="text-gray-300">·</span>
+        <Link href="/create" className="text-xs text-gray-500 hover:text-rose-500 transition-colors">
+          Create your own
         </Link>
       </div>
     </div>
@@ -1147,7 +1197,7 @@ export default function ViewNote() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-[#fdfbf7] dark:bg-[#0f0f0f]">
+        <div className="min-h-screen flex items-center justify-center bg-[#fdfbf7] dark:bg-[#121214]">
           <div className="animate-pulse text-gray-500 dark:text-gray-400">Loading...</div>
         </div>
       }
